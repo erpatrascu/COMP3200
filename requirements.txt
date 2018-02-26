@@ -6,3 +6,6 @@ MarkupSafe
 Werkzeug
 pandas
 pickleshare
+sklearn
+scipy
+scikit-learn
