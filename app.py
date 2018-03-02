@@ -1,11 +1,36 @@
 # app.py
 from flask import Flask, request, render_template
+from flask_sqlalchemy import SQLAlchemy
 import pickle
-#import sklearn
-import numpy as np
 import pandas as pd
 
+
+
 app = Flask(__name__)
+
+#configuring the database
+POSTGRES = {
+    'user': 'erp3g15',
+    'pw': 'password',
+    'db': 'crimedb',
+    'host': 'localhost',
+    'port': '5432',
+}
+
+app.config['DEBUG'] = True
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # silence the deprecation warning
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
+db = SQLAlchemy(app)
+
+
+
+#need to put some conditions on creating and populating the database and tables
+from models import *
+#db.create_all()
+
+
+#import populateDB
+#populateDB.initialise_database()
 
 
 @app.route('/')
@@ -31,26 +56,11 @@ def get_delay():
             new_vector[index_dict['DAY_OF_WEEK_' + str(result['day_of_week'])]] = 1
         except:
             pass
-        try:
-            new_vector[index_dict['UNIQUE_CARRIER_' + str(result['unique_carrier'])]] = 1
-        except:
-            pass
-        try:
-            new_vector[index_dict['ORIGIN_' + str(result['origin'])]] = 1
-        except:
-            pass
-        try:
-            new_vector[index_dict['DEST_' + str(result['dest'])]] = 1
-        except:
-            pass
-        try:
-            new_vector[index_dict['DEP_HOUR_' + str(result['dep_hour'])]] = 1
-        except:
-            pass
+
         '''
 
         cols = [0, 1]
-        pkl_file = open('models/logmodel.pkl', 'rb')
+        pkl_file = open('ML_models/logmodel.pkl', 'rb')
         logmodel = pickle.load(pkl_file)
         prediction = logmodel.predict(X.drop(X.columns[cols], axis = 1))
 

@@ -4,6 +4,9 @@ itsdangerous
 Jinja2
 MarkupSafe
 Werkzeug
+SQLAlchemy
+Flask-SQLAlchemy
+Psycopg2
 pandas
 pickleshare
 sklearn
