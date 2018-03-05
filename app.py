@@ -38,12 +38,22 @@ def index():
     return render_template('home.html')
 
 
-@app.route('/getdelay', methods=['POST', 'GET'])
-def get_delay():
+@app.route('/getprediction', methods=['POST', 'GET'])
+def get_prediction():
     if request.method == 'POST':
-        result = request.form
+        user_data = pd.read_json(request.get_json())
+        shift_to_time = {'00:00 - 08:00': '0', '08:00 - 16:00': '1', '16:00 - 00:00': '2'}
+        user_data['weekday'] = user_data['date'].dt.dayofweek
+        user_data['month'] = user_data['date'].dt.month
+        user_data['year'] = user_data['date'].dt.month
+        user_data['shiftTime'] = user_data['shiftTime'].map(shift_to_time)
 
-        data = pd.read_csv('datasets/example.csv')
+        crime_data = pd.read_sql_table("crime_data", con = app.config['SQLALCHEMY_DATABASE_URI'], parse_dates = [0])
+        weather_data = pd.read_sql_table("weather", con=app.config['SQLALCHEMY_DATABASE_URI'], parse_dates = [0])
+        zipcode_data = pd.read_sql_table("zipcode", con=app.config['SQLALCHEMY_DATABASE_URI'])
+        
+
+
         X = data[data['zipcode'] == int(result['zipcode'])]
 
         '''
@@ -65,6 +75,9 @@ def get_delay():
         prediction = logmodel.predict(X.drop(X.columns[cols], axis = 1))
 
         return render_template('result.html', prediction=prediction)
+
+
+
 
 if __name__ == "__main__":
     app.run()

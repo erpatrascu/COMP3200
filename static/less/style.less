@@ -11,6 +11,7 @@
 // TEXT COLOR
 @text-color: #fff;
 
+/*
 // SIDEBAR LINK COLOR VARIABLES
 @side-color-1: #1a1a1a;
 @side-color-2: darken(@side-color-3, 5%);
@@ -21,7 +22,7 @@
 @side-color-7: lighten(@side-color-6, 5%);
 @side-color-8: lighten(@side-color-7, 5%);
 @side-color-9: lighten(@side-color-8, 5%);
-
+*/
 // HAMBURGER COLOR
 @hamburger-color-closed: fadeout(@text-color, 30);
 @hamburger-color-open: @text-color;
@@ -45,11 +46,6 @@ html {
 }
 
 
-
-
-
-
-
 .nav {
   .open>a {
     background-color: transparent;
@@ -61,16 +57,6 @@ html {
     }
   }
 }
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -118,28 +104,6 @@ html {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*-------------------------------*/
 /*     Sidebar nav styles        */
 /*-------------------------------*/
@@ -167,52 +131,6 @@ html {
       width: 3px;
       z-index: -1;
     }
-    &:first-child {
-      a {
-        background-color: @side-color-1;
-        color: #ffffff;
-      }
-    }
-    &:nth-child(2) {
-      &:before {
-        background-color: @side-color-2;
-      }
-    }
-    &:nth-child(3) {
-      &:before {
-        background-color: @side-color-3;
-      }
-    }
-    &:nth-child(4) {
-      &:before {
-        background-color: @side-color-4;
-      }
-    }
-    &:nth-child(5) {
-      &:before {
-        background-color: @side-color-5;
-      }
-    }
-    &:nth-child(6) {
-      &:before {
-        background-color: @side-color-6;
-      }
-    }
-    &:nth-child(7) {
-      &:before {
-        background-color: @side-color-7;
-      }
-    }
-    &:nth-child(8) {
-      &:before {
-        background-color: @side-color-8;
-      }
-    }
-    &:nth-child(9) {
-      &:before {
-        background-color: @side-color-9;
-      }
-    }
     &:hover {
       &:before {
         transition: width .2s ease-in;
@@ -234,26 +152,12 @@ html {
       }
     }
   }
-  .dropdown-menu {
-    background-color: #222222;
-    border-radius: 0;
-    border: none;
-    box-shadow: none;
-    margin: 0;
-    padding: 0;
-    position: relative;
-    width: @full-width;
-  }
-}
-.sidebar-nav li a:hover, .sidebar-nav li a:active, .sidebar-nav li a:focus, .sidebar-nav li.open a:hover, .sidebar-nav li.open a:active, .sidebar-nav li.open a:focus {
-  background-color: transparent;
-  color: #ffffff;
-  text-decoration: none;
-}
+
 .sidebar-nav>.sidebar-brand {
   font-size: 20px;
   height: 65px;
   line-height: 44px;
+  text-align: center;
 }
 
 
