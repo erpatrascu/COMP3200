@@ -32,14 +32,35 @@ $(document).ready(function () {
     var date = $('#datepicker').datepicker().val();
     var shiftTime = $("#shift-select").val();
     var crimeType = $("#crime-select").val();
-    console.log(date + "\n" + shift + "\n" + crime);
+    //console.log(date + "\n" + shift + "\n" + crime);
 
-    $.ajax({
+    var path = '/getprediction/' + date + '/' + shiftTime + '/' + crimeType;
+    // Get results and make them visible in the overlay
+
+    $.get(path, function (data, status) {
+        console.log(data)
+/*
+        $('#overlay').addClass('overlay-big');
+        $('#overlay-results').removeClass('nodisplay');
+        $('#container').html(data);
+        $('#first-page').addClass('nodisplay');
+        $('#page-loader').addClass('nodisplay');
+        $('#dropdownMenu1').css("opacity", "");
+        $('#dropdownMenu1')[0].disabled = false;*/
+    }).fail(function (err) {
+      /*
+        $('#page-loader').addClass('nodisplay');
+        alert('There was an error :(');
+        $('#dropdownMenu1').css("opacity", "");
+        $('#dropdownMenu1')[0].disabled = false;*/
+    });
+
+    /*$.ajax({
       type : "POST",
-      url : "/set",
+      url : "/getprediction",
       data: JSON.stringify({ date: date, shiftTime: shiftTime, crimeType: crimeType }),
       contentType: 'application/json;charset=UTF-8',
-    });
+    });*/
   })
 
 });

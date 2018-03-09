@@ -2,44 +2,23 @@
 <html lang="en" >
 
 <head>
-  <meta charset="UTF-8">
-  <title>Crime prediction app</title>
+    <meta charset="UTF-8">
+    <title>Crime prediction app</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+    <link rel='stylesheet prefetch' href='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="static/css/style.css">
 
-  <link rel='stylesheet prefetch' href='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'>
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-      <link rel="stylesheet" href="static/css/style.css">
-
-      <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
-      <script src='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js'></script>
-      
-      <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-      
-          <script  src="static/js/index.js"></script>
-
-      
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+    <script src='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js'></script>  
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>  
+    <script  src="static/js/index.js"></script>
 
 </head>
 
 <body>
-
-
-<!--<form action = "/getdelay" method="POST">
-	<p> Select Zipcode:<input name="zipcode" type ="text" value="" /> </p>
-	<p> Select Airline :
-	<select name="unique_carrier">
-		<option value="AA">American Airlines </option>
-		<option value="DL">Delta Air Lines </option>
-		<option value="B6">JetBlue Airways</option>
-		<option value="WN">Southwest Airlines </option>
-		<option value="UA" selected>United Air Lines </option>
-	</select>
-	<p> <input type ="submit" value="submit" /> </p>
-</form>-->
-
-
-      <div id="wrapper">
+    <div id="wrapper">
 
         <!-- Sidebar -->
         <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
@@ -48,14 +27,13 @@
                     <h4>Los Angeles</h4>
                 </li>
                 
-                    <button type="button" class="btn btn-primary">Import new data</button>
+                <button type="button" class="btn btn-primary">Import new data</button>
                  
-                    <div class = "date-component">
-                        <label for="datepicker">Date:</label>
-                        <input type="text" id="datepicker">
-                    </div>
+                <div class = "date-component">
+                    <label for="datepicker">Date:</label>
+                    <input type="text" id="datepicker">
+                </div>
                      
-                    
                 <li>
                     <div class="form-group">
                         <label for="shift-select">Police shift:</label>
@@ -66,6 +44,7 @@
                         </select>
                       </div>
                 </li>
+
                 <li>
                     <div class="form-group">
                         <label for="crime-select">Crime type:</label>
@@ -75,31 +54,38 @@
                         </select>
                     </div>
                 </li>
+
                  <div class = "setbutton">
                         <button type="button" class="btn btn-primary">Set</button>
                  </div>
-                    
-                
-
             </ul>
         </nav>
         <!-- /#sidebar-wrapper -->
 
         <!-- Page Content -->
         <div id="page-content-wrapper">
-          <button type="button" class="hamburger is-closed animated fadeInLeft" data-toggle="offcanvas">
-            <span class="hamb-top"></span>
-            <span class="hamb-middle"></span>
-            <span class="hamb-bottom"></span>
-          </button>
+             <button type="button" class="hamburger is-closed animated fadeInLeft" data-toggle="offcanvas">
+                <span class="hamb-top"></span>
+                <span class="hamb-middle"></span>
+                <span class="hamb-bottom"></span>
+            </button>
             <div class="container">
-                <div class="row">
-                    <div class="col-lg-8 col-lg-offset-2">
-                        <h1 class="page-header">Content part</h1>
-                        <p class="lead">some text</p>
-
-                    </div>
-                </div>
+                
+                    <div id="map" style="width:100%; height:100%; position: absolute;
+                    top: 0;
+                    left: 0;"> </div>
+                        <script>
+                        var map;
+                        function initMap() {
+                            map = new google.maps.Map(document.getElementById("map"), {
+                                    center: {lat: 34.0207305, lng: -118.6919304},
+                                    zoom: 10
+                            });
+                        }
+                        </script>
+                        <script
+                            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8GwI6YMKgOnYwkUs48GWpBDhdyv049Bs&callback=initMap">
+                    </script>
             </div>
         </div>
         <!-- /#page-content-wrapper -->

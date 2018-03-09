@@ -40,7 +40,7 @@ html {
 }
 #wrapper.toggled #page-content-wrapper {
   margin-right: -220px;
-  position: absolute;
+  position: relative;
 }
 #sidebar-wrapper {
   -moz-transition: all 0.5s ease;
@@ -60,9 +60,13 @@ html {
   display: none;
 }
 #page-content-wrapper {
-  padding-top: 70px;
+  padding-top: 100%;
   width: 100%;
 }
+
+
+
+
 /*-------------------------------*/
 /*     Sidebar nav styles        */
 /*-------------------------------*/
@@ -245,10 +249,10 @@ label {
 }
 
 /* SOME DEMO STYLES - NOT REQUIRED */
-body,
+/*body,
 html {
   background-color: #F9E79F;
-}
+}*/
 body h1,
 body h2,
 body h3,
