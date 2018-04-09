@@ -64,38 +64,14 @@
 
         <!-- Page Content -->
         <div id="page-content-wrapper">
-             <button type="button" class="hamburger is-closed animated fadeInLeft" data-toggle="offcanvas">
-                <span class="hamb-top"></span>
-                <span class="hamb-middle"></span>
-                <span class="hamb-bottom"></span>
-            </button>
-            <div class="container">
-                
-                    <div id="map" style="width:100%; height:100%; position: absolute;
-                    top: 0;
-                    left: 0;"> </div>
-                        <script>
-                        var map;
-                        function initMap() {
-                            map = new google.maps.Map(document.getElementById("map"), {
-                                    center: {lat: 34.0207305, lng: -118.6919304},
-                                    zoom: 10
-                            });
-                        }
-                        </script>
-                        <script
-                            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8GwI6YMKgOnYwkUs48GWpBDhdyv049Bs&callback=initMap">
-                    </script>
+            <div class="container">       
+                <div id="map" style="width:100%; height:100%; position: absolute; top: 0; left: 0;"> </div>     
             </div>
         </div>
         <!-- /#page-content-wrapper -->
 
     </div>
     <!-- /#wrapper -->
-  
-
-
-
 </body>
 
 </html>

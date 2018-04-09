@@ -1,6 +1,6 @@
 from app import db
 
-
+#data about zipcodes
 class Zipcode(db.Model):
     __tablename__ = 'zipcode'
 
@@ -11,8 +11,9 @@ class Zipcode(db.Model):
     land_area = db.Column(db.Float())
     dist_to_south = db.Column(db.Float())
     dist_to_centre = db.Column(db.Float())
+    boundary = db.Column(db.String())
 
-    def __init__(self, zipcode, density, wealthy, population, land_area, dist_to_south, dist_to_centre):
+    def __init__(self, zipcode, density, wealthy, population, land_area, dist_to_south, dist_to_centre, boundary):
         self.zipcode = zipcode
         self.density = density
         self.wealthy = wealthy
@@ -20,8 +21,9 @@ class Zipcode(db.Model):
         self.land_area = land_area
         self.dist_to_south = dist_to_south
         self.dist_to_centre = dist_to_centre
+        self.boundary = boundary
 
-
+#weather data
 class Weather(db.Model):
     __tablename__ = 'weather'
 
@@ -41,6 +43,7 @@ class Weather(db.Model):
         self.tavg = tavg
         self.precip = precip
 
+#crime statistics data
 class CrimeData(db.Model):
     __tablename__ = 'crime_data'
 

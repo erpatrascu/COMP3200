@@ -68,16 +68,21 @@ def get_prediction(date, shiftTime, crimeType):
         #cols = [0, 1]
         pkl_file = open('ML_models/logmodel.pkl', 'rb')
         logmodel = pickle.load(pkl_file)
-        prediction = logmodel.predict(data.drop(['zipcode', 'robbery', 'date'], axis = 1))
+        prediction = logmodel.predict(data.drop(['zipcode', 'robbery', 'date', 'geometry'], axis = 1))
 
-        pred = pd.concat((data['zipcode'], pd.Series(prediction)), axis=1).reset_index()
-        print(pred)
+        pred = pd.concat((data['zipcode'], data['geometry'], pd.Series(prediction)), axis = 1).reset_index()
         #print(prediction)
         return pred.to_json(orient='records')
         #return render_template('result.html', prediction=prediction)
     #except Exception as err:
     #    traceback.print_exc(file=sys.stdout)
     #    return 'Error: ' + repr(err)
+
+@app.route('/getCoords')
+def getZipcodesCoords():
+    zipcode_data = pd.read_sql_table("zipcode", con=app.config['SQLALCHEMY_DATABASE_URI'])
+
+    return zipcode_data[['zipcode', 'geometry']].to_json(orient='records')
 
 
 
