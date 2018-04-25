@@ -51,7 +51,11 @@ $(document).ready(function () {
     var date = $('#datepicker').datepicker().val();
     var shiftTime = $("#shift-select").val();
     var crimeType = $("#crime-select").val();
-    //console.log(date + "\n" + shift + "\n" + crime);
+    if (crimeType === "Violent Crime") {
+      crimeType = 1
+    } else {
+      crimeType = 2
+    }
 
     var path = '/getprediction/' + date + '/' + shiftTime + '/' + crimeType;
 
@@ -59,6 +63,7 @@ $(document).ready(function () {
     // colours in red for predicted crime and white for no crime predicted
     $.get(path, function (data, status) {
         var zipcodes = JSON.parse(data);
+        console.log(zipcodes)
         clearPolygons();
         for (var i = 0; i<zipcodes.length; i++){ 
           if(zipcodes[i]["0"] == 1){

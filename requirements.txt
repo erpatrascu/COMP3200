@@ -12,3 +12,5 @@ pickleshare
 sklearn
 scipy
 scikit-learn
+weather-api
+uszipcode

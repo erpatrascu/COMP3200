@@ -1,4 +1,3 @@
-#from models import *
 from app import app, db
 import pandas as pd
 import sqlalchemy as sa
@@ -8,13 +7,14 @@ import datetime
 from sklearn import preprocessing
 import xml.etree.ElementTree as ET
 
+
 def initialise_database():
 
     #reads the csv files to import the data
     zipcode_data = pd.read_csv('datasets/app_zipcode_data.csv').drop('Unnamed: 0', axis = 1)
     crime_data = pd.read_csv('datasets/app_crime_data.csv').drop('Unnamed: 0', axis = 1)
 
-    #weather_data = pd.read_csv('datasets/2017_weather_data.csv').drop('Unnamed: 0', axis = 1)
+    weather_data = pd.read_csv('datasets/app_weather_data.csv').drop('Unnamed: 0', axis = 1)
     zipcodes_boundaries = pd.read_csv('datasets/zipcodes_boundaries.csv')
 
     #used to import the dataframe data into database
@@ -25,10 +25,18 @@ def initialise_database():
     zipcode_data['geometry'] = zipcode_data['geometry'].apply(getCoordinates)
     zipcode_data['geometry'] = zipcode_data['geometry'].astype(str)
 
+    import models
+
+    #c1 = models.CrimeType("Violent Crime")
+    #c2 = models.CrimeType("Burglary")
+    #db.session.add(c1)
+    #db.session.add(c2)
+    #db.session.commit()
+
     #populating the tables from the dataframes
     zipcode_data.to_sql(name='zipcode', if_exists='replace', index=False, con=con)
     crime_data.to_sql(name='crime_data', if_exists='replace', index=False, con=con)
-    #weather_data.to_sql(name='weather', if_exists='replace', index=False, con=con)
+    weather_data.to_sql(name='weather', if_exists='replace', index=False, con=con)
 
 
 #gets coordinates of the zipcode boundary from KML text
@@ -38,7 +46,6 @@ def getCoordinates(s):
         coordString = root[0][0][0].text
     else:
         coordString = root[0][0][0][0].text
-    #print(coordString)
     coordSets = coordString.split(' ')
     longs = []
     lats = []
@@ -49,9 +56,7 @@ def getCoordinates(s):
         lats.append(coords[1])
     for la, lo in zip(lats, longs):
         coord = {"lat": float(la), "lng": float(lo)}
-        print(coord)
         res.append(coord)
-    print(res)
     return res
 
 #adding crime data to the database
@@ -211,6 +216,10 @@ def import_crime_type(df, type):
     data = data.drop_duplicates()
 
     data.loc[:, 'crime_type'] = type
+
+    scaled_data = scaler.fit_transform(data.loc[:, ['crimes_per_pop']])
+    scaled_data = pd.DataFrame(scaled_data, columns=['crimes_per_pop'])
+    data.loc[:, ['crimes_per_pop']] = scaled_data.loc[:, ['crimes_per_pop']]
 
     return data
 

@@ -43,13 +43,12 @@ class Weather(db.Model):
 
 
 class CrimeType(db.Model):
-    _tablename_ = 'crime_type'
+    __tablename__ = 'crime_type'
 
     id = db.Column(db.Integer, primary_key = True)
     crimeType = db.Column(db.String())
 
     def __init__(self, crimeType):
-        self.date = date
         self.crimeType = crimeType
 
 
