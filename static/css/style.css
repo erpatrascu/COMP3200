@@ -105,29 +105,41 @@ button.btn.btn-primary {
   display: block;
   margin: 0 auto; 
   background-color:#1B4F72 ;
-  width: 70% 
+  width: 70%; 
+  cursor: pointer;
 }
 
 
+#page-loader {
+  position:absolute;
+  top:50%;
+  left:50%;
+  margin-top: -50px;
+  margin-left: -50px;
+  border: 16px solid #5DADE2;
+  border-radius: 50%;
+  border-top: 16px solid #1B4F72 ;
+  border-bottom: 16px solid #1B4F72 ;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
 
-/*new stuff for file upload*/
-/*.upload-btn-wrapper {
-  position: relative;
-  overflow: hidden;
-  display: inline-block;
-}*/
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
 
-/*.btn {
-  border: 2px solid gray;
-  color: gray;
-  background-color: white;
-  padding: 8px 20px;
-  border-radius: 8px;
-  font-size: 20px;
-  font-weight: bold;
-}*/
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 
-
+.nodisplay {
+  display: none;
+}
 
 #uploadform input[type=file] {
   font-size: 100px;
@@ -135,6 +147,7 @@ button.btn.btn-primary {
   left: 0;
   top: 0;
   opacity: 0;
+  cursor: pointer;
 }
 /*end new stuff*/
 
@@ -158,13 +171,19 @@ label {
   float: left;
 }
 
-
+.overlay{
+  position: absolute; /* Sit on top of the page content */
+  width: 100%; /* Full width (cover the whole page) */
+  height: 100%; /* Full height (cover the whole page) */
+  top: 0; 
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.5); /*white background with opacity */
+}
 
 /* SOME DEMO STYLES - NOT REQUIRED */
-/*body,
-html {
-  background-color: #F9E79F;
-}*/
+
 body h1,
 body h2,
 body h3,

@@ -19,6 +19,8 @@
     <script type="text/javascript">
         $(document).ready(function(){
             $('input[type="file"]').change(function(){
+                $('.overlay').removeClass('nodisplay');
+                $('#page-loader').removeClass('nodisplay');
                 event.preventDefault();
                 var form_data = new FormData($('#uploadform')[0]);
                 
@@ -30,10 +32,15 @@
                     processData: false,
                     dataType: 'json'
                 }).done(function(data, textStatus, jqXHR){
-                    console.log('Success!');
+                    alert('New data imported successfully.');
+                    $('#page-loader').addClass('nodisplay');
+                    $('.overlay').addClass('nodisplay');
                 }).fail(function(data){
-                    alert('error!');
+                    $('#page-loader').addClass('nodisplay');
+                    $('.overlay').addClass('nodisplay');
+                    alert('Wrong file uploaded! Please reupload.');
                 });
+                
             });
         });
     </script>
@@ -49,16 +56,19 @@
                     <h4>Los Angeles</h4>
                 </li>
                 
-                <form id="uploadform" method="post" enctype="multipart/form-data">
-                    <input type="file" name="file" accept=".csv" id="uploadID"/>
+                 <!-- Import button -->
+                <form id="uploadform" method="post" enctype="multipart/form-data" onmouseover="" style="cursor: pointer;">
+                    <input type="file" name="file" accept=".csv" id="uploadID" onmouseover="" style="cursor: pointer;"/>
                     <button id = "importbutton" type="button" class="btn btn-primary">Import new data</button>
                 </form>
 
+                 <!-- Date picker -->
                 <div class = "date-component">
                     <label for="datepicker">Date:</label>
                     <input type="text" id="datepicker">
                 </div>
 
+                 <!-- Time range chooser -->
                 <li>
                     <div class="comp">
                         <div class="form-group">
@@ -72,6 +82,7 @@
                     </div>
                 </li>
             
+                 <!-- Crime type chooser -->
                 <li>
                     <div class="form-group">
                         <label for="crime-select">Crime type:</label>
@@ -87,6 +98,8 @@
                         <button type="button" class="btn btn-primary">Set</button>
                  </div>
             </ul>
+
+            <div class="nodisplay overlay"></div>
         </nav>
         <!-- /#sidebar-wrapper -->
 
@@ -96,10 +109,15 @@
                 <div id="map" style="width:100%; height:100%; position: absolute; top: 0; left: 0;"> </div>     
             </div>
         </div>
+
         <!-- /#page-content-wrapper -->
 
+    <div class="nodisplay overlay"></div>
+    <div class="nodisplay" id="page-loader"></div>
     </div>
     <!-- /#wrapper -->
+
+    
 </body>
 
 </html>

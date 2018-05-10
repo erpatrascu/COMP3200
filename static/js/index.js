@@ -24,25 +24,6 @@ $(document).ready(function () {
 
   $('#wrapper').toggleClass('toggled');
 
-
-  
-  /*
-    
-  };*/
-
-
-  /*//for file choosing
-  var fileSelector = $('<input type="file">');
-
-  $("#importbutton").click(function(){
-      fileSelector.click();
-
-      return false;
-  });
- // $('body').html(selectDialogueLink);*/
-
-
-  //used
   var polygons = [];
 
   //deleting all the drawn polygons when redrawing
@@ -118,22 +99,7 @@ $(document).ready(function () {
   });
 
   $('#uploadID').onchange = function() {
-    console.log("yasss");
-    event.preventDefault();
-    var form_data = new FormData($('#uploadform')[0]);
     
-    $.ajax({
-        type: 'POST',
-        url: '/upload',
-        data: form_data,
-        contentType: false,
-        processData: false,
-        dataType: 'json'
-    }).done(function(data, textStatus, jqXHR){
-        console.log('Success!');
-    }).fail(function(data){
-        alert('error!');
-    });
   };
 
 });

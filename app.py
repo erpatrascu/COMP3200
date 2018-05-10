@@ -25,16 +25,15 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # silence the deprecation w
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
 db = SQLAlchemy(app)
 
-
-
 #need to put some conditions on creating and populating the database and tables
 import models
-#db.create_all()
-
-
 import populateDB
-#populateDB.initialise_database()
 
+#populate the db if it is empty
+if(populateDB.is_db_empty()):
+    print("populate db")
+    db.create_all()
+    populateDB.initialise_database()
 
 @app.route('/')
 def index():
@@ -45,7 +44,6 @@ def get_prediction(date, shiftTime, crimeType):
 
     #create a dataframe from the user data
     user_data = pd.DataFrame(data={'date': [date], 'time': [shiftTime], 'crime_type': [crimeType]})
-    print(date)
     user_data['date'] = pd.to_datetime(user_data['date'], format='%d-%m-%Y')
     user_data['year_month'] = user_data['date'].map(lambda x: 100 * x.year + x.month)
     user_data['crime_type'] = user_data['crime_type'].astype(int)
@@ -99,9 +97,7 @@ def get_prediction(date, shiftTime, crimeType):
     data = pd.merge(data, zipcode_data, on=['zipcode'])
     data = pd.merge(data, weather_data, on=['date'])
     data = data.drop_duplicates()
-    
-    print(data.head())
-    print(data.info())
+
     #creating the dummy features for weekday and month
     data.loc[:, 'weekday'] = data.loc[:, 'date'].dt.weekday_name
     data.loc[:,'month'] = data.loc[:,'date'].dt.month
@@ -145,7 +141,6 @@ def get_prediction(date, shiftTime, crimeType):
 @app.route('/upload', methods=['POST'])
 def upload():
     if request.method == 'POST':
-        print("YASSSSSSS")
         f = request.files['file']
         if f:
             #filename = os.path.join(app.config['UPLOAD_FOLDER'], "%s.%s" % (now.strftime("%Y-%m-%d-%H-%M-%S-%f"), file.filename.rsplit('.', 1)[1]))
