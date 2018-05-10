@@ -11,7 +11,7 @@ body {
 body,
 html {
   height: 100%;
-  background-color: rgb(240, 194, 13);
+  background-color: #E6FEFD;
 }
 .nav .open > a {
   background-color: transparent;
@@ -90,11 +90,15 @@ html {
   display: inline-block;
   line-height: 15px;
   position: relative;
-  padding: 0px 6px 0px 31px;
+  padding: 20px 6px 0px 31px;
 }
 
 #datepicker {
   width: 85%;
+}
+
+.comp{
+  padding: 10px 0px 0px 0px;
 }
 
 button.btn.btn-primary {
@@ -104,9 +108,39 @@ button.btn.btn-primary {
   width: 70% 
 }
 
-.setbutton {
+
+
+/*new stuff for file upload*/
+/*.upload-btn-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}*/
+
+/*.btn {
+  border: 2px solid gray;
+  color: gray;
+  background-color: white;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-size: 20px;
+  font-weight: bold;
+}*/
+
+
+
+#uploadform input[type=file] {
+  font-size: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}
+/*end new stuff*/
+
+#setbutton {
   position: relative;  
-  padding-top: 200px;
+  padding-top: 170px;
 }
 
 .sidebar-nav > .sidebar-brand {
@@ -123,6 +157,7 @@ label {
   width: 150px;
   float: left;
 }
+
 
 
 /* SOME DEMO STYLES - NOT REQUIRED */

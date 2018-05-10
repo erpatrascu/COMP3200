@@ -60,8 +60,8 @@ def getCoordinates(s):
     return res
 
 #adding crime data to the database
-def add_crime_data_to_DB():
-    crimes_cut = import_crime_data()
+def add_crime_data_to_DB(crimes_raw):
+    crimes_cut = import_crime_data(crimes_raw)
     vcrime = crimes_cut.loc[
         crimes_cut['crime_code'].isin(['210', '220', '230', '231', '623', '624', '110', '120', '121'])]
     burglary = crimes_cut.loc[crimes_cut['crime_code'].isin(['310', '320'])]
@@ -77,9 +77,9 @@ def add_crime_data_to_DB():
 
 
 #preprocess the imported data
-def import_crime_data():
+def import_crime_data(crimes_raw):
     #TODO reading the data in -> this will be changed
-    crimes_raw = pd.read_csv("Crime_Data_from_2010_to_Present.csv", parse_dates=[2])
+    #crimes_raw = pd.read_csv("Crime_Data_from_2010_to_Present.csv", parse_dates=[2])
 
     # selecting only the columns we will be interested in
     crimes_cut = crimes_raw[['Date Occurred', 'Time Occurred', 'Crime Code', 'Location ']]
@@ -122,6 +122,8 @@ def import_crime_data():
     codes = [(search.by_coordinate(lat, lng, returns = 1))[0].Zipcode for lat, lng in zip(crimes_cut['latitude'], crimes_cut['longitude'])]
     crimes_cut['zipcode'] = codes
 
+    print("___________1___________")
+    print(crimes_cut.head())
     return crimes_cut
 
 
@@ -162,6 +164,8 @@ def import_crime_type(df, type):
     temp_time = count_by_loc_time(data)
     temp_t = count_by_time(data)
 
+    print("_____________2____________")
+    print(data.head())
     # merging into the train dataset to contain the number of robberies happened the previous month, and the previous 6 months
     data = pd.merge(data, temp, on=['zipcode', 'year_month'])
 
@@ -171,15 +175,17 @@ def import_crime_type(df, type):
     # merging into the train dataset to contain the number of robberies happened at different times the previous 6 months
     data = pd.merge(data, temp_t, on=['year_month', 'time'])
 
-    #TODO: take the data from databasse
-    zipcodes = pd.read_csv("app_zipcode_data.csv")
+    zipcodes = pd.read_sql_table("zipcode", con=app.config['SQLALCHEMY_DATABASE_URI'])
     zipcodes = zipcodes[["zipcode", "population"]]
 
     #changing the type from object to int and then merge with data
     data['zipcode'] = data['zipcode'].astype('int')
+    zipcodes['zipcode'] = zipcodes['zipcode'].astype('int')
 
     data = pd.merge(data, zipcodes, on='zipcode')
 
+    print("____________3_____________")
+    print(data.head())
     #for normalising the data values
     scaler = preprocessing.MinMaxScaler()
     scaled_data = scaler.fit_transform(data.loc[:, ['count_1m_loc', 'count_6m_loc', 'count_2y_loc',
@@ -200,13 +206,16 @@ def import_crime_type(df, type):
                                                             'count_2y_loc_time',
                                                             'count_1m_time', 'count_6m_time', 'count_2y_time',
                                                             ]]
-
+    print("___________4______________")
+    print(data.head())
     #to only extract this months details
     now = datetime.datetime.now()
     date = 100 * now.year + now.month
-
+    data['year_month'] = data['year_month'].astype(int)
     data = data[data['year_month'] == date]
 
+    print("____________5_____________")
+    print(data.head())
     #creating an additional column
     data.loc[:,'crimes_per_pop'] = data['count_2y_loc']/data['population']
     data = data.replace(np.inf, 0)
@@ -215,11 +224,14 @@ def import_crime_type(df, type):
     data = data.drop(['date', 'vcrime', 'population'], axis=1)
     data = data.drop_duplicates()
 
-    data.loc[:, 'crime_type'] = type
-
+    print("____________6_____________")
+    print(data.head())
+    data.loc[:,'crime_type'] = int(type)
     scaled_data = scaler.fit_transform(data.loc[:, ['crimes_per_pop']])
     scaled_data = pd.DataFrame(scaled_data, columns=['crimes_per_pop'])
     data.loc[:, ['crimes_per_pop']] = scaled_data.loc[:, ['crimes_per_pop']]
+    data = data.replace(np.inf, 0)
+    data = data.fillna(0)
 
     return data
 

@@ -20,9 +20,27 @@ $(document).ready(function () {
     document.getElementsByTagName('head')[0].appendChild(js_file);
 
   //setting up the date picker and the app outlook  
-  $( "#datepicker" ).datepicker({ dateFormat: 'dd-mm-yy' }).datepicker("setDate", new Date());
+  $( "#datepicker" ).datepicker({ dateFormat: 'dd-mm-yy' , minDate: 0, maxDate: 9}).datepicker("setDate", new Date());
 
   $('#wrapper').toggleClass('toggled');
+
+
+  
+  /*
+    
+  };*/
+
+
+  /*//for file choosing
+  var fileSelector = $('<input type="file">');
+
+  $("#importbutton").click(function(){
+      fileSelector.click();
+
+      return false;
+  });
+ // $('body').html(selectDialogueLink);*/
+
 
   //used
   var polygons = [];
@@ -47,7 +65,7 @@ $(document).ready(function () {
   }
 
   // getting the predictions results
-  $(".setbutton").click(function () {
+  $("#setbutton").click(function () {
     var date = $('#datepicker').datepicker().val();
     var shiftTime = $("#shift-select").val();
     var crimeType = $("#crime-select").val();
@@ -98,6 +116,25 @@ $(document).ready(function () {
       alert("A problem occurred! Make sure you have up to date data for predictions!");
     });
   });
+
+  $('#uploadID').onchange = function() {
+    console.log("yasss");
+    event.preventDefault();
+    var form_data = new FormData($('#uploadform')[0]);
+    
+    $.ajax({
+        type: 'POST',
+        url: '/upload',
+        data: form_data,
+        contentType: false,
+        processData: false,
+        dataType: 'json'
+    }).done(function(data, textStatus, jqXHR){
+        console.log('Success!');
+    }).fail(function(data){
+        alert('error!');
+    });
+  };
 
 });
 

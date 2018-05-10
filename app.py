@@ -1,5 +1,5 @@
 # app.py
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, jsonify
 from flask_sqlalchemy import SQLAlchemy
 import pickle
 import pandas as pd
@@ -7,7 +7,7 @@ from weather import Weather, Unit
 from sklearn import preprocessing
 import calendar
 import datetime
-
+import tempfile
 
 app = Flask(__name__)
 
@@ -45,7 +45,8 @@ def get_prediction(date, shiftTime, crimeType):
 
     #create a dataframe from the user data
     user_data = pd.DataFrame(data={'date': [date], 'time': [shiftTime], 'crime_type': [crimeType]})
-    user_data['date'] = pd.to_datetime(user_data['date'])
+    print(date)
+    user_data['date'] = pd.to_datetime(user_data['date'], format='%d-%m-%Y')
     user_data['year_month'] = user_data['date'].map(lambda x: 100 * x.year + x.month)
     user_data['crime_type'] = user_data['crime_type'].astype(int)
     shift_to_time = {'00:00 - 08:00': 0, '08:00 - 16:00': 1, '16:00 - 00:00': 2}
@@ -97,7 +98,10 @@ def get_prediction(date, shiftTime, crimeType):
     data = pd.merge(user_data, crime_data,  on=['year_month', 'time', 'crime_type'])
     data = pd.merge(data, zipcode_data, on=['zipcode'])
     data = pd.merge(data, weather_data, on=['date'])
-
+    data = data.drop_duplicates()
+    
+    print(data.head())
+    print(data.info())
     #creating the dummy features for weekday and month
     data.loc[:, 'weekday'] = data.loc[:, 'date'].dt.weekday_name
     data.loc[:,'month'] = data.loc[:,'date'].dt.month
@@ -105,7 +109,6 @@ def get_prediction(date, shiftTime, crimeType):
 
     data = pd.concat([data, pd.get_dummies(data['weekday'])], axis=1)
     data = pd.concat([data, pd.get_dummies(data['month'])], axis=1)
-    print(data.head())
 
     weekdays = pd.DataFrame({'weekday': ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']})
     data = pd.merge(pd.get_dummies(weekdays.weekday), data, on = data['weekday'].unique().tolist()).fillna(0)
@@ -113,11 +116,7 @@ def get_prediction(date, shiftTime, crimeType):
     months = pd.DataFrame({'month': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']})
     data = pd.merge(pd.get_dummies(months.month), data, on = data['month'].unique().tolist()).fillna(0)
 
-    pd.set_option('display.width', 5000)
-    pd.set_option('display.max_columns', 60)
-    pd.set_option('display.height', 500)
-    pd.set_option('display.max_rows', 500)
-
+    #changing column data types to int
     data[['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday',
           'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']] = data[['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday',
                   'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']].astype(int)
@@ -129,24 +128,34 @@ def get_prediction(date, shiftTime, crimeType):
 
     #pkl_file = None
     if(user_data['crime_type'][0] == 1):
-        print('VIOLENT CRIMEEEE')
         pkl_file = open('ML_models/logmodel_vc.pkl', 'rb')
-        model = pickle.load(pkl_file)
-        prediction = model.predict(
-            data.drop(['zipcode', 'date', 'geometry', 'weekday', 'month', 'year_month', 'crime_type'], axis=1))
-
-        pred = pd.concat((data['zipcode'], data['geometry'], pd.Series(prediction)), axis=1).reset_index()
-
-        return pred.to_json(orient='records')
     else:
         pkl_file = open('ML_models/logmodel_pc.pkl', 'rb')
-        model = pickle.load(pkl_file)
-        prediction = model.predict(
-            data.drop(['zipcode', 'date', 'geometry', 'weekday', 'month', 'year_month', 'crime_type'], axis=1))
+    model = pickle.load(pkl_file)
+    prediction = model.predict(
+        data.drop(['zipcode', 'date', 'geometry', 'weekday', 'month', 'year_month', 'crime_type'], axis=1))
 
-        pred = pd.concat((data['zipcode'], data['geometry'], pd.Series(prediction)), axis=1).reset_index()
+    pred = pd.concat((data['zipcode'], data['geometry'], pd.Series(prediction)), axis=1).reset_index().drop('index', axis = 1)
 
-        return pred.to_json(orient='records')
+    return pred.to_json(orient='records')
+
+
+
+#need to change this to call some method to store the data
+@app.route('/upload', methods=['POST'])
+def upload():
+    if request.method == 'POST':
+        print("YASSSSSSS")
+        f = request.files['file']
+        if f:
+            #filename = os.path.join(app.config['UPLOAD_FOLDER'], "%s.%s" % (now.strftime("%Y-%m-%d-%H-%M-%S-%f"), file.filename.rsplit('.', 1)[1]))
+            #file.save(filename)
+            tempfile_path = tempfile.NamedTemporaryFile().name
+            f.save(tempfile_path)
+            data = pd.read_csv(tempfile_path, parse_dates=[1])
+            populateDB.add_crime_data_to_DB(data)
+            return jsonify({"success":True})
+
 
 
 if __name__ == "__main__":

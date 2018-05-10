@@ -15,6 +15,28 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>  
     <script  src="static/js/index.js"></script>
 
+    <!-- code for importing the new data   -->
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('input[type="file"]').change(function(){
+                event.preventDefault();
+                var form_data = new FormData($('#uploadform')[0]);
+                
+                $.ajax({
+                    type: 'POST',
+                    url: '/upload',
+                    data: form_data,
+                    contentType: false,
+                    processData: false,
+                    dataType: 'json'
+                }).done(function(data, textStatus, jqXHR){
+                    console.log('Success!');
+                }).fail(function(data){
+                    alert('error!');
+                });
+            });
+        });
+    </script>
 </head>
 
 <body>
@@ -27,24 +49,29 @@
                     <h4>Los Angeles</h4>
                 </li>
                 
-                <button type="button" class="btn btn-primary">Import new data</button>
-                 
+                <form id="uploadform" method="post" enctype="multipart/form-data">
+                    <input type="file" name="file" accept=".csv" id="uploadID"/>
+                    <button id = "importbutton" type="button" class="btn btn-primary">Import new data</button>
+                </form>
+
                 <div class = "date-component">
                     <label for="datepicker">Date:</label>
                     <input type="text" id="datepicker">
                 </div>
-                     
-                <li>
-                    <div class="form-group">
-                        <label for="shift-select">Police shift:</label>
-                        <select class="form-control input-sm" id="shift-select">
-                          <option>08:00 - 16:00</option>
-                          <option>16:00 - 00:00</option>
-                          <option>00:00 - 08:00</option>
-                        </select>
-                      </div>
-                </li>
 
+                <li>
+                    <div class="comp">
+                        <div class="form-group">
+                            <label for="shift-select">Police shift:</label>
+                            <select class="form-control input-sm" id="shift-select">
+                                <option>08:00 - 16:00</option>
+                                <option>16:00 - 00:00</option>
+                                <option>00:00 - 08:00</option>
+                            </select>
+                        </div>
+                    </div>
+                </li>
+            
                 <li>
                     <div class="form-group">
                         <label for="crime-select">Crime type:</label>
@@ -55,7 +82,8 @@
                     </div>
                 </li>
 
-                 <div class = "setbutton">
+
+                 <div id = "setbutton">
                         <button type="button" class="btn btn-primary">Set</button>
                  </div>
             </ul>
